@@ -1,0 +1,33 @@
+{
+    "_comment": "JDK8 base AMI using Amazon Linux (amzn-ami-hvm-2018.03.0.20180811-x86_64-ebs)",
+    "variables": {
+      "ami_name": "{{isotime "060102-1504"}}-base-ami
+    },
+    "builders": [
+      {
+        "type": "amazon-ebs",
+        "source_ami": "Source가 될 Image의 id를 지정합니다.",
+        "vpc_id": "Instance가 올라갈 VPC 명을 지정해주시면 됩니다.",
+        "subnet_id": "Instance가 올라갈 Subnet 명을 지정합니다.",
+        "security_group_id": "Instance가 올라가 있는 동안 사용할 Security Group을 지정합니다.",
+        "instance_type": "t2.small",
+        "ssh_interface": "private_ip",
+        "ssh_username": "ec2-user",
+        "ami_name": "{{user `ami_name` | clean_ami_name}}",
+        "ami_description": "OpenJDK 8 with Amazon Linux",
+        "tags": {
+          "Name": "{{user `ami_name` | clean_ami_name}}",
+          "BaseAMI_Id": "{{ .SourceAMI }}",
+          "BaseAMI_Name": "{{ .SourceAMIName }}",
+          "TEAM": "시스템신뢰성개발팀",
+        },
+        "ami_users": ["이 AMI를 공유할 AWS Account ID 목록"]
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "ansible",
+        "playbook_file": "playbook/jdk8.yml"
+      }
+    ]
+  }

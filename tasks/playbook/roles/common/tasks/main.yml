@@ -1,0 +1,13 @@
+- name: remove unused yum packages -ntp
+  become: yes
+  yum:
+  name: ntp
+  state: absent
+
+- name: update yum packages
+  yum: list=updates update_cache=true
+
+- name: set Asia/Seoul timezone
+  become: yes
+  timezone:
+  name: Asia/Seoul
